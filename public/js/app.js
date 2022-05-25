@@ -1,5 +1,3 @@
-require("./bootstrap");
-/* global bootstrap: false */
 (() => {
     "use strict";
     const tooltipTriggerList = Array.from(
