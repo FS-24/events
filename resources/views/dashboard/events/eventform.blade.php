@@ -2,7 +2,7 @@
 
 @section('title', 'New Event')
 @section('content')
-    <div class="card my-3  shadow ">
+    <div class="card my-3 mx-auto w-70 shadow">
         
         @if (session('status'))
         <x-alert type="success" :message="session('status')"/>
@@ -11,7 +11,7 @@
             <h1>Add Event</h1>
         </div>
         <div class="card-body">
-            <form action="/dashboard/events" enctype="multipart/form-data" method="POST">
+            <form action="{{route('event.store')}}" enctype="multipart/form-data" method="POST">
                 @csrf
                 <div class="form-group m-2">
                     <label for="name" class="form-label">Event Name</label>

@@ -22,9 +22,15 @@ class AuthController extends Controller
  
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
- 
-            return redirect()->intended('dashboard/events')->with(['user'=>Auth::user()]);
+            $user = Auth::user();
+            if ($user->role == "admin") {
+                return redirect()->route('event.list')
+                ->with(['user'=>Auth::user()]);
+            }
+            return redirect('/')
+            ->with(['user'=>Auth::user()]);
         }
+        
  
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',

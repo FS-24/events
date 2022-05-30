@@ -2,7 +2,7 @@
 
 @section('title', 'Login')
 @section('content')
-    <div class="card my-3 w-70 mx-auto shadow ">
+    <div class="card my-3 w-50 mx-auto shadow ">
         @if (session('status'))
     <div class="alert alert-success">
         {{ session('status') }}
@@ -12,7 +12,7 @@
             <h1>Login</h1>
         </div>
         <div class="card-body">
-            <form action="/login"  method="POST">
+            <form action="{{route('login')}}"  method="POST">
                 @csrf
                   <div class="form-group m-2">
                     <label for="email" class="form-label">Email</label>
@@ -33,8 +33,8 @@
                 
                
               
-                <input type="reset" value="Reset" class="btn btn-warning btn-md float-end m-2"/>
-                <button class="btn btn-primary btn-md float-end m-2"> <i class="bi bi-plus"></i> Save</button>
+                
+                <button class="btn btn-primary btn-md float-end m-2"> Login</button>
                  
             </form>
         </div>

@@ -10,16 +10,19 @@
             <a class="nav-link active" aria-current="page" href="/">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Events</a>
+            <a class="nav-link" href="{{route('event.list')}}">Events</a>
           </li>
           @auth
           <li class="nav-item">
-            <a class="nav-link bg-danger text-light" href="/logout">Logout</a>
+            <a class="nav-link text-light" href="{{route('dashboard')}}">Dashboard</a>
+          </li>
+           <li class="nav-item">
+            <a class="nav-link bg-danger text-light" href="{{route('logout')}}">Logout</a>
           </li>
           @endauth
          @unless (Auth::check())
          <li class="nav-item">
-          <a class="nav-link" href="/login">Login</a>
+          <a class="nav-link" href="{{route('login')}}">Login</a>
         </li>
          @endunless
          

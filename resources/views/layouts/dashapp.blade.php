@@ -75,7 +75,7 @@
         </header>
         <div class="d-flex flex-nowrap">
             <x-sidebar/>
-            <div class="m-1">
+            <div class="m-1 w-100 h-100">
                 @yield('content')
             </div>
         </div>

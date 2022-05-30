@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Event;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class EventController extends Controller
@@ -16,8 +17,10 @@ class EventController extends Controller
     public function index()
     {
         $events = Event::paginate(5);
-        return view('dashboard.home', ['events'=>$events]) ;
-    }
+        return view('dashboard.events.eventlist', ['events'=>$events]) ;
+    } 
+    
+   
 
     /**
      * Show the form for creating a new resource.
@@ -26,7 +29,7 @@ class EventController extends Controller
      */
     public function create()
     {
-       return view('dashboard.events.eventform');
+        return view('dashboard.events.eventform');
     }
 
     /**
@@ -44,11 +47,16 @@ class EventController extends Controller
         ]);
 
         if ($request->hasFile('photo')) {
-           $request['photo'] = 'storage/'.$request->file('photo')->store('public/img','public');
+           $path = 'storage/'.$request->file('photo')->store('public/img','public');
+        }else{
+            $path = null;
         }
-
-         Event::create($request->all());
-        return redirect('dashboard/events')->with(['status'=>'Event created successfully']);
+        $event = $request->all();
+        $event['author_id'] = Auth::user()->id;
+        $event['photo'] = $path;
+         Event::create($event);
+        return redirect()->route('event.list')
+        ->with(['status'=>'Event created successfully']);
     }
 
     /**
@@ -69,8 +77,9 @@ class EventController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
-    {
-        //
+    { //
+        $event = Event::find($id);
+        return view('dashboard.events.editform', ['event'=>$event]);
     }
 
     /**
@@ -82,7 +91,26 @@ class EventController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $event = Event::find($id);
+        $request->validate([
+            'title'=>'required|string',
+            'event_date'=>'required|date',
+            'photo'=>'mimes:png,jpg,svg,gif'
+        ]);
+
+        if ($request->hasFile('photo')) {
+           $path = 'storage/'.$request->file('photo')->store('public/img','public');
+        }else{
+            $path = null;
+        }
+        
+        $event->title = $request['title'];
+        $event->content = $request['content'];
+        $event->event_date = $request['event_date'];
+        $event->photo = $path;
+        $event->save();
+        return redirect()->route('event.list')
+        ->with(['status'=>'Event updated successfully']);
     }
 
     /**
@@ -93,12 +121,15 @@ class EventController extends Controller
      */
     public function destroy($id)
     {
-        //
-        // $event = Event::find($id);
-        // dd($id);
-        // $event->delete();
+        
         Event::destroy($id);
-        return redirect('dashboard/events')->with(['status'=>'Event deleted successfully']);
+        return redirect()->route('event.list')
+        ->with(['status'=>'Event deleted successfully']);
 
+    }
+
+    public function search($search){
+        $events = Event::where('title', 'like', '%'.$search.'%')->paginate(3);
+        return redirect()->route('event.search')->with('events', $events);
     }
 }

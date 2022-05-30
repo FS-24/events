@@ -13,6 +13,17 @@ class Event extends Model
        'title',
        'content',
        'event_date',
-       'photo'
+       'photo',
+       'author_id'
    ];
+
+   public function author(){
+       return $this->belongsTo(User::class);
+   }
+
+   public function comments(){
+       return $this->hasMany(Comment::class);
+   }
+
+
 }
